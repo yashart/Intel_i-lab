@@ -1,4 +1,4 @@
-#include <stdio.h>
+п»ї#include <stdio.h>
 #include <math.h>
 #include <locale>
 
@@ -15,16 +15,16 @@ const int TWO_RADICALS = 9876543;
 void message (const int event, double x1, double x2)
 {
    if( event == ALL_NUMBERS)
-        printf( "Любое число является корнем");
+        printf( "Р›СЋР±РѕРµ С‡РёСЃР»Рѕ СЏРІР»СЏРµС‚СЃСЏ РєРѕСЂРЅРµРј");
 
     if( event ==  NO_RADICALS)
-        printf( "Корней нет");
+        printf( "РљРѕСЂРЅРµР№ РЅРµС‚");
 
     if( event == ONE_RADICAL)
-        printf( "Один корень %lg", x1);
+        printf( "РћРґРёРЅ РєРѕСЂРµРЅСЊ %lg", x1);
 
     if( event == TWO_RADICALS)
-        printf( "Два корня %lg и %lg", x1, x2);
+        printf( "Р”РІР° РєРѕСЂРЅСЏ %lg Рё %lg", x1, x2);
 }
 
 
