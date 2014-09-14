@@ -1,6 +1,6 @@
-﻿#include <stdio.h>
+#include <stdio.h>
 #include <math.h>
-#include <locale>
+#include <locale.h>
 
 const double POISON = -11.3456;
 const int POLINOM_DEGREE = 2;
@@ -15,16 +15,16 @@ const int TWO_RADICALS = 9876543;
 void message (const int event, double x1, double x2)
 {
    if( event == ALL_NUMBERS)
-        printf( "Любое число является корнем");
+        printf( "Any number is radical");
 
     if( event ==  NO_RADICALS)
-        printf( "Корней нет");
+        printf( "No radicals");
 
     if( event == ONE_RADICAL)
-        printf( "Один корень %lg", x1);
+        printf( "One radical %lg", x1);
 
     if( event == TWO_RADICALS)
-        printf( "Два корня %lg и %lg", x1, x2);
+        printf( "Two radicals %lg и %lg", x1, x2);
 }
 
 
@@ -51,7 +51,7 @@ void logic(double* coefficients)
             	message (ONE_RADICAL, x1, x2);
             }
     	}else{
-            discrim = coefficients[1] * coefficients[1] 
+            discrim = coefficients[1] * coefficients[1]
 			- 4 * coefficients[0] * coefficients[2];
            if( discrim < 0)
         	{
@@ -78,6 +78,7 @@ void logic(double* coefficients)
 
 void scan(double* coefficients)
 {
+    printf( "Write a %d polinomal coefficients by a space \n", POLINOM_DEGREE + 1);
     for(int i = 0; i < POLINOM_DEGREE+1; i++)
         scanf("%lg", &coefficients[i]);
     logic(coefficients);
@@ -85,7 +86,6 @@ void scan(double* coefficients)
 
 int main()
 {
-    setlocale(LC_ALL,"Russian");
     double polinomal_coefficiens[POLINOM_DEGREE+1];
 
 
@@ -97,3 +97,4 @@ int main()
     scan(polinomal_coefficiens);
     return 0;
 }
+
