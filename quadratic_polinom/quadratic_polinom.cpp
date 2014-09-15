@@ -3,12 +3,36 @@
 #include <locale.h>
 
 const double POISON = -11.3456;
-const int POLINOM_DEGREE = 2;
+
 const int ALL_NUMBERS = 12124215;
 const int NO_RADICALS = 12788394;
 const int ONE_RADICAL = 12341251;
 const int TWO_RADICALS = 9876543;
 
+const int POLINOM_DEGREE = 2;
+
+double discrim_counting(double* coefficients)
+{
+    return coefficients[1] * coefficients[1] - 4 * coefficients[0] * coefficients[2];
+}
+
+double radicals_counting(const int event, double* coefficients)
+{
+    if(event == ONE_RADICAL)
+    {
+        return -coefficients[2] / coefficients[1];
+    }
+
+    if(event == 1*TWO_RADICALS)
+    {
+        return (-coefficients[1] - sqrt(discrim_counting(coefficients)) )/ 2/coefficients[0];
+    }
+
+    if(event == 2*TWO_RADICALS)
+    {
+        return (-coefficients[1] + sqrt(discrim_counting(coefficients)) )/ 2/coefficients[0];
+    }
+}
 
 
 
@@ -27,11 +51,9 @@ void message (const int event, double x1, double x2)
         printf( "Two radicals %lg и %lg", x1, x2);
 }
 
-
 void logic(double* coefficients)
 {
     double discrim = POISON;
-    double x1 = POISON, x2 = POISON;
 
     if(POLINOM_DEGREE == 2)
     {
@@ -41,33 +63,32 @@ void logic(double* coefficients)
             {
                 if( coefficients[2] == 0)
                 {
-                    message (ALL_NUMBERS, x1, x2);
+                    message (ALL_NUMBERS, POISON, POISON);
                 }else
                 {
-                    message (NO_RADICALS, x1, x2);
+                    message (NO_RADICALS, POISON, POISON);
                 }
             }else{
-            	x1 = -coefficients[2]/coefficients[1];
-            	message (ONE_RADICAL, x1, x2);
+
+            	message (ONE_RADICAL, radicals_counting(ONE_RADICAL,coefficients), POISON);
             }
     	}else{
-            discrim = coefficients[1] * coefficients[1]
-			- 4 * coefficients[0] * coefficients[2];
+            discrim = discrim_counting(coefficients);
            if( discrim < 0)
         	{
-                message (NO_RADICALS, x1, x2);
+                message (NO_RADICALS, POISON, POISON);
             }
             else
             {
-                x1 = (-coefficients[1] + sqrt(discrim) )/ 2/coefficients[0];
-                x2 = (-coefficients[1] - sqrt(discrim) )/ 2/coefficients[0];
+
                 if( discrim == 0)
                 {
-                    message (ONE_RADICAL, x1, x2);
+                    message (ONE_RADICAL, radicals_counting (TWO_RADICALS, coefficients ),
+                    POISON );
                 }else
                 {
-
-                    message (TWO_RADICALS, x1, x2);
+                    message (TWO_RADICALS, radicals_counting (TWO_RADICALS, coefficients ),
+                    radicals_counting(2 * TWO_RADICALS, coefficients ) );
                 }
             }
         }
