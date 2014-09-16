@@ -3,6 +3,7 @@
 #include <locale.h>
 
 const double POISON = -11.3456;
+#define POISON -11.3456
 
 const int ALL_NUMBERS = 12124215;
 const int NO_RADICALS = 12788394;
