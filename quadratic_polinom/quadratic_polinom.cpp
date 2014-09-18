@@ -13,19 +13,19 @@ double discrim_counting(double* coefficients)
     return coefficients[1] * coefficients[1] - 4 * coefficients[0] * coefficients[2];
 }
 
-double radicals_counting(const int event, double* coefficients)
+double radicals_counting(events event, double* coefficients)
 {
-    if(event == evnt::ONE_RADICAL)
+    if(event == ONE_RADICAL)
     {
         return -coefficients[2] / coefficients[1];
     }
 
-    if(event == 1*evnt::TWO_RADICALS)
+    if(event == TWO_RADICALS)
     {
         return (-coefficients[1] - sqrt(discrim_counting(coefficients)) )/ 2/coefficients[0];
     }
 
-    if(event == 2*evnt::TWO_RADICALS)
+    if(event == TWO_RADICALS_2)
     {
         return (-coefficients[1] + sqrt(discrim_counting(coefficients)) )/ 2/coefficients[0];
     }
@@ -34,18 +34,18 @@ double radicals_counting(const int event, double* coefficients)
 
 
 
-void message (const int event, double x1, double x2)
+void message (events event, double x1, double x2)
 {
-    if( event == evnt::ALL_NUMBERS)
+    if( event == ALL_NUMBERS)
         printf( "Any number is radical");
 
-    if( event ==  evnt::NO_RADICALS)
+    if( event ==  NO_RADICALS)
         printf( "No radicals");
 
-    if( event == evnt::ONE_RADICAL)
+    if( event == ONE_RADICAL)
         printf( "One radical %lg", x1);
 
-    if( event == evnt::TWO_RADICALS)
+    if( event == TWO_RADICALS)
         printf( "Two radicals %lg и %lg", x1, x2);
 }
 
@@ -61,17 +61,17 @@ void logic(double* coefficients)
             {
                 if( coefficients[2] == 0)
                 {
-                    message (evnt::ALL_NUMBERS, POISON, POISON);
+                    message (ALL_NUMBERS, POISON, POISON);
                 }
                 else
                 {
-                    message (evnt::NO_RADICALS, POISON, POISON);
+                    message (NO_RADICALS, POISON, POISON);
                 }
             }
             else
             {
 
-                message (evnt::ONE_RADICAL, radicals_counting(evnt::ONE_RADICAL,coefficients), POISON);
+                message (ONE_RADICAL, radicals_counting(ONE_RADICAL,coefficients), POISON);
             }
         }
         else
@@ -79,20 +79,20 @@ void logic(double* coefficients)
             discrim = discrim_counting(coefficients);
             if( discrim < 0)
             {
-                message (evnt::NO_RADICALS, POISON, POISON);
+                message (NO_RADICALS, POISON, POISON);
             }
             else
             {
 
                 if( discrim == 0)
                 {
-                    message (evnt::ONE_RADICAL, radicals_counting (evnt::TWO_RADICALS, coefficients ),
+                    message (ONE_RADICAL, radicals_counting (TWO_RADICALS, coefficients ),
                              POISON );
                 }
                 else
                 {
-                    message (evnt::TWO_RADICALS, radicals_counting (evnt::TWO_RADICALS, coefficients ),
-                             radicals_counting(2 * evnt::TWO_RADICALS, coefficients ) );
+                    message (TWO_RADICALS, radicals_counting (TWO_RADICALS, coefficients ),
+                             radicals_counting(TWO_RADICALS_2, coefficients ) );
                 }
             }
         }
