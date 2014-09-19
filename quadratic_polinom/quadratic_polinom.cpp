@@ -3,7 +3,7 @@
 #include <locale.h>
 #include "GlobalConstants.h"
 
-#define POISON -11.3456
+#define POISON NAN
 
 
 #define POLINOM_DEGREE 2
@@ -103,10 +103,25 @@ void logic(double* coefficients)
 
 void scan(double* coefficients)
 {
-    printf( "Write a %d polinomal coefficients by a space \n", POLINOM_DEGREE + 1);
+    double right_scan = POISON;
     for(int i = 0; i < POLINOM_DEGREE+1; i++)
-        scanf("%lg", &coefficients[i]);
+    {
+        printf( "Write the %d-st polinomal coefficients of %d polinom by a space \n",i+1 ,POLINOM_DEGREE + 1);
+
+        right_scan = scanf("%lg[0-9]", &coefficients[i]);
+        fflush(stdin);
+        while(getchar() != 10);
+        if(right_scan == 0)
+        {
+            i--;
+
+        }
+
+        right_scan = POISON;
+    }
+
     logic(coefficients);
+
 }
 
 int main()
