@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 //{========================================================================
 //solves quadratic equation ax^2 + bx + c = 0 .
 //@param events             events is type of equation for message function
@@ -12,17 +11,11 @@
 //}========================================================================
 
 
-=======
->>>>>>> origin/master
 #ifndef GLOBALCONSTANTS_H_INCLUDED
 #define GLOBALCONSTANTS_H_INCLUDED
 
 enum events { ALL_NUMBERS, NO_RADICALS, ONE_RADICAL, TWO_RADICALS, TWO_RADICALS_2};
 
-<<<<<<< HEAD
-=======
-const double POISON = NAN;
->>>>>>> origin/master
 
 const int POLINOM_DEGREE = 2;
 
@@ -30,7 +23,6 @@ struct radicals
 {
     double x1,x2;
 };
-<<<<<<< HEAD
 //{========================================================================
 //  It is construction for radicals struct.(like as class)
 //}========================================================================
@@ -43,20 +35,10 @@ void radicals_construction(struct radicals* r)
 //  @param coefficints*     array of polinom coefficients
 //  @return                 discriminant
 //}========================================================================
-=======
-
-void radicals_destruction(struct radicals* r)
-{
-    r->x1 = POISON;
-    r->x2 = POISON;
-}
-
->>>>>>> origin/master
 double discrim_counting(double* coefficients)
 {
     return coefficients[1] * coefficients[1] - 4 * coefficients[0] * coefficients[2];
 }
-<<<<<<< HEAD
 //{========================================================================
 //  @param      coefficints*     array of polinom coefficients
 //  @param      events
@@ -64,9 +46,6 @@ double discrim_counting(double* coefficients)
 //  @return     radicals
 //  @warning    radicals will be changed
 //}========================================================================
-=======
-
->>>>>>> origin/master
 radicals radicals_counting(events event, double* coefficients, radicals* r)
 {
     if(event == ONE_RADICAL)
@@ -83,16 +62,11 @@ radicals radicals_counting(events event, double* coefficients, radicals* r)
     return *r;
 }
 
-<<<<<<< HEAD
 //{========================================================================
 //  Print answer.
 //  @param  events
 //  @param  radicals
 //}========================================================================
-=======
-
-
->>>>>>> origin/master
 void message (events event, radicals r)
 {
     if( event == ALL_NUMBERS)
@@ -107,7 +81,6 @@ void message (events event, radicals r)
     if( event == TWO_RADICALS)
         printf( "Two radicals %lg и %lg", r.x1, r.x2);
 }
-<<<<<<< HEAD
 //{========================================================================
 //  Check coefficients and calling message with event argument
 //  @param  coefficients
@@ -116,12 +89,6 @@ void message (events event, radicals r)
 void logic(double* coefficients, radicals* r)
 {
     double discrim = NAN;
-=======
-
-void logic(double* coefficients, radicals* r)
-{
-    double discrim = POISON;
->>>>>>> origin/master
 
     if(POLINOM_DEGREE == 2)
     {
@@ -168,7 +135,6 @@ void logic(double* coefficients, radicals* r)
 
     }
 }
-<<<<<<< HEAD
 //{========================================================================
 //  Read arguments
 //  @param  coefficiens
@@ -177,12 +143,6 @@ void logic(double* coefficients, radicals* r)
 void scan(double* coefficients)
 {
     double right_scan = NAN;
-=======
-
-void scan(double* coefficients)
-{
-    double right_scan = POISON;
->>>>>>> origin/master
     for(int i = 0; i < POLINOM_DEGREE+1; i++)
     {
         printf( "Write the %d-st polinomal coefficients of %d polinom by a space \n",i+1 ,POLINOM_DEGREE + 1);
@@ -196,11 +156,7 @@ void scan(double* coefficients)
 
         }
 
-<<<<<<< HEAD
         right_scan = NAN;
-=======
-        right_scan = POISON;
->>>>>>> origin/master
     }
 
 
