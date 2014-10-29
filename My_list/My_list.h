@@ -1,3 +1,5 @@
+#ifndef My_list_h
+#define My_list_h
 #include <iostream>
 
 enum list_errors
@@ -123,3 +125,5 @@ list_errors list<elem_t>::delElem(const int pos)
     ls->~list();
     return OK;
 }
+
+#endif
