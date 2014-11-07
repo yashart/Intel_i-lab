@@ -1,0 +1,11 @@
+errorsdata(OK,1)
+errorsdata(FILE_NO_OPEN,2)
+errorsdata(NULL_LENGTH,3)
+errorsdata(BAD_MALLOC,4)
+errorsdata(NULLPOINTER,6)
+errorsdata(ENDOFARRAY,7)
+errorsdata(STACKFULL,8)
+errorsdata(STACKNULLSIZE,9)
+errorsdata(ENDOFFILE,10)
+errorsdata(BAD_FILE,5)
+
