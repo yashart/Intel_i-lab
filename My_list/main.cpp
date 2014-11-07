@@ -2,12 +2,15 @@
 
 int main() {
 
-    list <int> li(1, 0, 0);
-
-    li.newElem(0, 2);
-    li.newElem(1, 3);
-    li.delElem(2);
-    li.dump(li.listOk(&li));
+    list <int> li(-128, 0, 0);
+    list <int>* list = &li;
+    for(int i = 0; i<50000; i++)
+    {
+        li.newElem(list, 5);
+        list = list->nextElem;
+    }
+    printf("Азаз");
+    //li.dump(li.listOk(&li));
 
     return 0;
 }
