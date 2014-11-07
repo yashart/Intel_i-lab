@@ -1,0 +1,9 @@
+push 11 
+push 11 
+jmp 11 
+push 1 
+add 
+push_ax 
+pop 
+
+pop
