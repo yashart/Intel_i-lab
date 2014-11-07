@@ -1,4 +1,8 @@
 #include "../errors.h"
+#include "../fileworking.h"
+#include <stdlib.h>
+#include <string.h>
+#include <stdio.h>
 
 char* labelToStr(long **labels, int number);
 

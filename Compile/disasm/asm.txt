@@ -1,9 +1,1 @@
-push 11 
-push 11 
-jmp 11 
-push 1 
-add 
-push_ax 
-pop 
-
-pop
+push 11 push pop_cx pop_bx pop_ax push_ax push je push_bx push mul pop_bx push_bx push_bx mul push push_ax push_cx mul mul sub push_dx push

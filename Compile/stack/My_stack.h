@@ -17,7 +17,7 @@
 #define ASSERT_OK(cond) if(cond){stackDump(cond);assert(!"Stack_failed");};
 //! change typedef to make stack with other types
 //! @warning ! if you change type, stackDump can not work.
-typedef int stackData;
+typedef double stackData;
 
 //! special type for diagnosis program
 const int INITIAL_STACK_SIZE = 10;

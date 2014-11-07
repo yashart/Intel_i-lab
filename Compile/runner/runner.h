@@ -2,10 +2,12 @@
 #include "../fileworking.h"
 #include "../stack/My_calk.h"
 #include "command_proc_t.h"
+#include "math.h"
 
 struct runner
 {
     stack programStk;
+    stack functionStk;
     stackData AX;
     stackData BX;
     stackData CX;

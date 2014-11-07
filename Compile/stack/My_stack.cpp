@@ -16,11 +16,11 @@ void stackDump(stack const *stk)
     }
     printf("stack (%s)\n", (char*)&STACK_ERRNO);
     printf("{count = %d\n", stk->posEndElem);
-    printf(" data(%d) [%d] max %d\n", sizeof*(stk->data), stk->data, stk->maxLength);
+    printf(" data(%d) [%lg] max %d\n", sizeof*(stk->data), stk->data, stk->maxLength);
     printf("   {\n");
     for(int i = 0; i < stk->maxLength; i++)
     {
-        printf("    [%d] = %d%c\n", i, stk->data[i], (i < stk->posEndElem)?'*':' ');
+        printf("    [%d] = %lg%c\n", i, stk->data[i], (i < stk->posEndElem)?'*':' ');
     }
     printf("   }\n");
     printf("}\n");

@@ -5,6 +5,9 @@ const char* INPUT_FILE_NAME = "disasm.txt";
 errors runnerConstruction(runner *proc)
 {
     STACK_ERRNO      = stackConstructor(&(proc->programStk));
+    if(STACK_ERRNO != OK)
+        PLEASE_KILL_MY_VERY_BAD_FUNCTION
+    STACK_ERRNO      = stackConstructor(&(proc->functionStk));
     proc->program    = NULL;
     proc->programLen = 0;
     proc->pointer    = 0;
@@ -24,7 +27,7 @@ stackData *scanFile(long *length) {
     command = (stackData*) realloc(command, sizeof(*command));
     long fileLength = 0;
 
-    for (fileLength = 0; fscanf (file, "%d", &command[fileLength]) != EOF; fileLength++)
+    for (fileLength = 0; fscanf (file, "%lg", &command[fileLength]) != EOF; fileLength++)
     {
         command = (stackData*) realloc(command, (fileLength + 2) * sizeof (*command));
     }
@@ -126,13 +129,18 @@ errors runnerInterpretetator(runner *proc)
                 stackDel(&(proc->programStk));
                 break;
             }
+            case Sqrt:
+            {
+                stackSqrt(&(proc->programStk));
+                break;
+            }
 
             case ja:
             {
                 proc->pointer++;
                 if(stackPop(&(proc->programStk)) > stackPop(&(proc->programStk)))
                 {
-                    proc->pointer = proc->program[proc->pointer];
+                    proc->pointer = (int)proc->program[(long)proc->pointer] - 1;
                 }
                 break;
             }
@@ -141,7 +149,7 @@ errors runnerInterpretetator(runner *proc)
                 proc->pointer++;
                 if(stackPop(&(proc->programStk)) >= stackPop(&(proc->programStk)))
                 {
-                    proc->pointer = proc->program[proc->pointer];
+                    proc->pointer = (int)proc->program[(long)proc->pointer] - 1;
                 }
                 break;
             }
@@ -150,7 +158,7 @@ errors runnerInterpretetator(runner *proc)
                 proc->pointer++;
                 if(stackPop(&(proc->programStk)) < stackPop(&(proc->programStk)))
                 {
-                    proc->pointer = proc->program[proc->pointer];
+                    proc->pointer = (int)proc->program[(long)proc->pointer] - 1;
                 }
                 break;
             }
@@ -159,7 +167,7 @@ errors runnerInterpretetator(runner *proc)
                 proc->pointer++;
                 if(stackPop(&(proc->programStk)) <= stackPop(&(proc->programStk)))
                 {
-                    proc->pointer = proc->program[proc->pointer];
+                    proc->pointer = (int)proc->program[(long)proc->pointer] - 1;
                 }
                 break;
             }
@@ -168,7 +176,7 @@ errors runnerInterpretetator(runner *proc)
                 proc->pointer++;
                 if(stackPop(&(proc->programStk)) == stackPop(&(proc->programStk)))
                 {
-                    proc->pointer = proc->program[proc->pointer];
+                    proc->pointer = (int)proc->program[(long)proc->pointer] - 1;
                 }
                 break;
             }
@@ -177,21 +185,42 @@ errors runnerInterpretetator(runner *proc)
                 proc->pointer++;
                 if(stackPop(&(proc->programStk)) != stackPop(&(proc->programStk)))
                 {
-                    proc->pointer = proc->program[proc->pointer];
+                    proc->pointer = (int)proc->program[(long)proc->pointer] - 1;
                 }
                 break;
             }
             case jmp:
             {
                 proc->pointer++;
-                proc->pointer = proc->program[proc->pointer];
+                proc->pointer = (int)proc->program[(long)proc->pointer] - 1;
                 break;
             }
+            case call:
+            {
+                proc->pointer++;
+                stackPush(&proc->functionStk, proc->pointer+1);
+                proc->pointer = (int)proc->program[(long)proc->pointer] - 1;
+                break;
+            }
+
             case out:
             {
-                printf("%d\n", stackPop(&(proc->programStk)));
+                printf("%lg\n", stackPop(&(proc->programStk)));
                 break;
             }
+            case ret:
+            {
+                proc->pointer = stackPop(&proc->functionStk);
+                break;
+            }
+            case end:
+            {
+                proc->pointer = proc->programLen;
+                break;
+            }
+            default:
+                break;
         }
     }
+    return OK;
 }

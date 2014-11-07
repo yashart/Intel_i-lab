@@ -1,20 +1,4 @@
-#include "../errors.h"
 #include "asm.h"
-#include "../fileworking.h"
-#include <stdlib.h>
-#include <string.h>
-#include <stdio.h>
-
-int main()
-{
-    char* textBuffer = NULL;
-    long length = 0;
-    MY_ERRNO = read_file("asm.txt", &textBuffer, &length);
-    MY_ERRNO = preassembler(&textBuffer, &length);
-    MY_ERRNO = assembler(&textBuffer, &length);
-    MY_ERRNO = write_file("disasm.txt", &textBuffer, length);
-    return 0;
-}
 
 char* labelToStr(long **labels, int number) {
     long* localLabel = *labels;
@@ -64,13 +48,15 @@ errors preassembler(char **textBuffer, long *length)
     long* labels = (long*) calloc(10, sizeof(*labels));
     long commandNumber = 0; //label point
     bool isCommand = true;
+    int labelsQuantity = 0;
     for(pointerPosition; pointerPosition < *length; pointerPosition++) {
         if (strstr(&localBuffer[pointerPosition], "label") == &localBuffer[pointerPosition]) {
             pointerPosition += strlen("label");
             while (((localBuffer[pointerPosition]) < '0') || ((localBuffer[pointerPosition]) > '9')) {
                 pointerPosition++;
             }
-            labels[localBuffer[pointerPosition] - '0'] = commandNumber;
+            labels[localBuffer[pointerPosition] - '0'] = commandNumber - labelsQuantity;
+            labelsQuantity+= 3;
             continue;
         }
         #define command_list(name,value) \

@@ -28,3 +28,10 @@ errors stackDel(stack* stk) {
     stackPush(stk, dividend / divider);
     if(!stackOk(stk)) {ASSERT_OK(stk);};
 }
+
+errors stackSqrt(stack *stk)
+{
+    if(!stackOk(stk)) {ASSERT_OK(stk);};
+    stackPush(stk, sqrt(stackPop(stk)));
+    if(!stackOk(stk)) {ASSERT_OK(stk);};
+}
