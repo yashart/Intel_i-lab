@@ -4,8 +4,8 @@ CFLAGS=-c -Wall
 
 all: runner
 
-runner: main.o runner.o errors.o fileworking.o My_stack.o My_calk.o
-	$(CC) main.o runner.o errors.o fileworking.o My_stack.o My_calk.o -o runner
+runner: main.o runner.o errors.o fileworking.o My_stack.o My_calk.o commands.o
+	$(CC) main.o runner.o errors.o fileworking.o My_stack.o My_calk.o commands.o -o runner
 
 main.o: main.cpp
 	$(CC) $(CFLAGS) main.cpp
@@ -24,6 +24,9 @@ My_stack.o: ../stack/My_stack.cpp
 
 My_calk.o: ../stack/My_calk.cpp
 	$(CC) $(CFLAGS) ../stack/My_calk.cpp
+
+commands.o: ../commands.cpp
+	$(CC) $(CFLAGS) ../commands.cpp
 
 clean:
 	rm -rf *.o runner

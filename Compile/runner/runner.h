@@ -1,7 +1,6 @@
 #include "../errors.h"
 #include "../fileworking.h"
 #include "../stack/My_calk.h"
-#include "command_proc_t.h"
 #include "math.h"
 
 struct runner

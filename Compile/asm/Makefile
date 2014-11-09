@@ -4,8 +4,8 @@ CFLAGS=-c -Wall
 
 all: asm
 
-asm: main.o asm.o errors.o fileworking.o
-	$(CC) main.o asm.o errors.o fileworking.o -o asm
+asm: main.o asm.o errors.o fileworking.o commands.o
+	$(CC) main.o asm.o errors.o fileworking.o commands.o -o asm
 
 main.o: main.cpp
 	$(CC) $(CFLAGS) main.cpp
@@ -18,6 +18,9 @@ errors.o: ../errors.cpp
 
 fileworking.o: ../fileworking.cpp
 	$(CC) $(CFLAGS) ../fileworking.cpp
+
+commands.o: ../commands.cpp
+	$(CC) $(CFLAGS) ../commands.cpp
 
 clean:
 	rm -rf *.o asm

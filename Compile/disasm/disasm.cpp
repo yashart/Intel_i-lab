@@ -1,4 +1,5 @@
 #include "disasm.h"
+#include "../commands.h"
 
 errors disassembler(char **textBuffer, long *length)
 {
@@ -21,21 +22,12 @@ errors disassembler(char **textBuffer, long *length)
         PLEASE_KILL_MY_VERY_BAD_FUNCTION
     }
     bool isFunction = true;
-#define command_list(name,value) \
-    if(strstr(&localBuffer[pointerPosition], #value) == &localBuffer[pointerPosition]) \
-    {\
-        disasmFile = strcat(disasmFile, #name); \
-        disasmFile = strcat(disasmFile, " ");\
-        pointerPosition += strlen(#value); \
-        disasmLength += strlen(#name); \
-        printf("%c ", #value[0]); \
-        if((value / 10 == 4)||(#name == "push")) \
-        { \
-            isFunction = false; \
-        } \
-        continue; \
-    }
+    procCommand asmbler;
+    procCommandCtor(&asmbler);
+    scanAllCommands(&asmbler);
+    bool findFuncktion = false;
     char symbol[2] = {};
+    int uses_command = -1;
     for(pointerPosition; pointerPosition < *length; pointerPosition++)
     {
         if(!isFunction)
@@ -49,13 +41,34 @@ errors disassembler(char **textBuffer, long *length)
             }
             isFunction = true;
         }
-    #include "../command_list.h"
+        findFuncktion = false;
+        for(int i = 0; i < asmbler.commandQuantity; i++)
+        {
+            sscanf(&localBuffer[pointerPosition], "%d", &uses_command);
+            printf("%d", uses_command);
+
+            if(uses_command == asmbler.value[i])
+            {
+                uses_command = 0;
+                disasmFile = strcat(disasmFile, asmbler.name[i]);
+                disasmFile = strcat(disasmFile, " ");
+                pointerPosition += 2;
+                disasmLength += strlen(asmbler.name[i]);
+                if((asmbler.value[i] / 10 == 4)||(strstr(asmbler.name[i] , "push")))
+                {
+                    isFunction = false;
+                }
+                findFuncktion = true;
+                break;
+            }
+        }
+        if(isFunction)
+            continue;
         symbol[0] = localBuffer[pointerPosition];
         disasmFile = strcat(disasmFile, symbol);
         disasmLength++;
         symbol[0] = 0;
     }
-#undef command_list
     *length = disasmLength;
     free(*textBuffer);
     *textBuffer = disasmFile;

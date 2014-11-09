@@ -49,6 +49,11 @@ errors preassembler(char **textBuffer, long *length)
     long commandNumber = 0; //label point
     bool isCommand = true;
     int labelsQuantity = 0;
+
+    procCommand asmbler;
+    procCommandCtor(&asmbler);
+    scanAllCommands(&asmbler);
+    bool findFuncktion = false;
     for(pointerPosition; pointerPosition < *length; pointerPosition++) {
         if (strstr(&localBuffer[pointerPosition], "label") == &localBuffer[pointerPosition]) {
             pointerPosition += strlen("label");
@@ -59,21 +64,26 @@ errors preassembler(char **textBuffer, long *length)
             labelsQuantity+= 3;
             continue;
         }
-        #define command_list(name,value) \
-        if(strstr(&localBuffer[pointerPosition], #name) == &localBuffer[pointerPosition]) \
-            {\
-                isCommand = true;\
-                commandNumber++; \
-                pointerPosition += strlen(#name); \
-                continue; \
+        findFuncktion = false;
+        for(int i = 0; i < asmbler.commandQuantity; i++)
+        {
+            if(strstr(&localBuffer[pointerPosition], asmbler.name[i]) == &localBuffer[pointerPosition])
+            {
+                findFuncktion = true;
+                //printf("%s %d\n", asmbler.name[i], asmbler.value[i]);
+                isCommand = true;
+                commandNumber++;
+                pointerPosition += strlen(asmbler.name[i]);
+                break;
             }
-        #include "../command_list.h"
+        }
+        if(findFuncktion)
+            continue;
         if(isCommand)
             commandNumber++;
         isCommand = false;
-        #undef command_list
     }
-    printf("%s\n%d\n", localBuffer, labels[1]);
+    printf("%s\n%d\n", localBuffer, labels[2]);
 
     for(pointerPosition = 0; pointerPosition < *length; pointerPosition++) {
         if(strstr(&localBuffer[pointerPosition], ":") == &localBuffer[pointerPosition])
@@ -115,18 +125,30 @@ errors assembler(char **textBuffer, long *length)
         PLEASE_KILL_MY_VERY_BAD_FUNCTION
     }
 
-    #define command_list(name,value) \
-    if(strstr(&localBuffer[pointerPosition], #name) == &localBuffer[pointerPosition]) \
-    {\
-        disasmFile = strcat(disasmFile, #value); \
-        pointerPosition += strlen(#name) - 1; \
-        disasmLength += strlen(#value); \
-        continue; \
-    }
     char symbol[2] = {};
+    procCommand asmbler;
+    procCommandCtor(&asmbler);
+    scanAllCommands(&asmbler);
+    bool findFuncktion = false;
     for(pointerPosition; pointerPosition < *length; pointerPosition++)
     {
-        #include "../command_list.h"
+        findFuncktion = false;
+        for(int i = 0; i < asmbler.commandQuantity; i++)
+        {
+            if(strstr(&localBuffer[pointerPosition], asmbler.name[i]) == &localBuffer[pointerPosition])
+                {
+                    symbol[0] = ('0'+asmbler.value[i]/10);
+                    disasmFile = strcat(disasmFile, symbol);
+                    symbol[0] = ('0'+asmbler.value[i]%10);
+                    disasmFile = strcat(disasmFile, symbol);
+                    pointerPosition += strlen(asmbler.name[i]) - 1;
+                    disasmLength += 2;
+                    findFuncktion = true;
+                    break;
+                }
+        }
+        if(findFuncktion)
+            continue;
         if(strstr(&localBuffer[pointerPosition], "label") == &localBuffer[pointerPosition])
             {
                 while (((localBuffer[pointerPosition]) < '0') || ((localBuffer[pointerPosition]) > '9')) {
@@ -138,7 +160,6 @@ errors assembler(char **textBuffer, long *length)
         disasmFile = strcat(disasmFile, symbol);
         disasmLength++;
     }
-    #undef command_list
     *length = disasmLength;
     free(*textBuffer);
     *textBuffer = disasmFile;

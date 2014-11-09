@@ -1,4 +1,6 @@
 #include "runner.h"
+#include "../commands.h"
+#include <string.h>
 
 const char* INPUT_FILE_NAME = "disasm.txt";
 
@@ -40,187 +42,185 @@ stackData *scanFile(long *length) {
 
 errors runnerInterpretetator(runner *proc)
 {
-    command_proc_t command = maxelem;
+    procCommand asmbler;
+    procCommandCtor(&asmbler);
+    scanAllCommands(&asmbler);
+    int commandNumber = 0;
     for (; proc->pointer < proc->programLen; proc->pointer++)
     {
-        command = (command_proc_t) proc->program[proc->pointer];
-        switch (command)
-        {
-            case push_ax:
+        for(commandNumber = 0; ((commandNumber < asmbler.commandQuantity) &&(asmbler.value[commandNumber] != proc->program[proc->pointer])); commandNumber++);
+            if(strstr(asmbler.name[commandNumber], "push_ax"))
             {
                 stackPush(&(proc->programStk), proc->AX);
-                break;
+                continue;
             }
-            case push_bx:
+            if(strstr(asmbler.name[commandNumber], "push_bx"))
             {
                 stackPush(&(proc->programStk), proc->BX);
-                break;
+                continue;
             }
-            case push_cx:
+            if(strstr(asmbler.name[commandNumber], "push_cx"))
             {
                 stackPush(&(proc->programStk), proc->CX);
-                break;
+                continue;
             }
-            case push_dx:
+            if(strstr(asmbler.name[commandNumber], "push_dx"))
             {
                 stackPush(&(proc->programStk), proc->DX);
-                break;
+                continue;
             }
-            case push_ex:
+            if(strstr(asmbler.name[commandNumber], "push_ex"))
             {
                 stackPush(&(proc->programStk), proc->EX);
-                break;
+                continue;
             }
-            case push:
+            if(strstr(asmbler.name[commandNumber], "push"))
             {
                 proc->pointer++;
                 stackPush(&(proc->programStk), proc->program[proc->pointer]);
-                break;
+                continue;
             }
 
-            case pop_ax:
+            if(strstr(asmbler.name[commandNumber], "pop_ax"))
             {
                 proc->AX = stackPop(&(proc->programStk));
-                break;
+                continue;
             }
-            case pop_bx:
+            if(strstr(asmbler.name[commandNumber], "pop_bx"))
             {
                 proc->BX = stackPop(&(proc->programStk));
-                break;
+                continue;
             }
-            case pop_cx:
+            if(strstr(asmbler.name[commandNumber], "pop_cx"))
             {
                 proc->CX = stackPop(&(proc->programStk));
-                break;
+                continue;
             }
-            case pop_dx:
+            if(strstr(asmbler.name[commandNumber], "pop_dx"))
             {
                 proc->DX = stackPop(&(proc->programStk));
-                break;
+                continue;
             }
-            case pop_ex:
+            if(strstr(asmbler.name[commandNumber], "pop_ex"))
             {
                 proc->EX = stackPop(&(proc->programStk));
-                break;
+                continue;
             }
-            case pop:
+            if(strstr(asmbler.name[commandNumber], "pop"))
             {
                 stackPop(&(proc->programStk));
-                break;
+                continue;
             }
 
-            case add:
+            if(strstr(asmbler.name[commandNumber], "add"))
             {
                 stackAdd(&(proc->programStk));
-                break;
+                continue;
             }
-            case sub:
+            if(strstr(asmbler.name[commandNumber], "sub"))
             {
                 stackSub(&(proc->programStk));
-                break;
+                continue;
             }
-            case mul:
+            if(strstr(asmbler.name[commandNumber], "mul"))
             {
                 stackMul(&(proc->programStk));
-                break;
+                continue;
             }
-            case del:
+            if(strstr(asmbler.name[commandNumber], "del"))
             {
                 stackDel(&(proc->programStk));
-                break;
+                continue;
             }
-            case Sqrt:
+            if(strstr(asmbler.name[commandNumber], "Sqrt"))
             {
                 stackSqrt(&(proc->programStk));
-                break;
+                continue;
             }
 
-            case ja:
+            if(strstr(asmbler.name[commandNumber], "ja"))
             {
                 proc->pointer++;
                 if(stackPop(&(proc->programStk)) > stackPop(&(proc->programStk)))
                 {
                     proc->pointer = (int)proc->program[(long)proc->pointer] - 1;
                 }
-                break;
+                continue;
             }
-            case jae:
+            if(strstr(asmbler.name[commandNumber], "jae"))
             {
                 proc->pointer++;
                 if(stackPop(&(proc->programStk)) >= stackPop(&(proc->programStk)))
                 {
                     proc->pointer = (int)proc->program[(long)proc->pointer] - 1;
                 }
-                break;
+                continue;
             }
-            case jb:
+            if(strstr(asmbler.name[commandNumber], "jb"))
             {
                 proc->pointer++;
                 if(stackPop(&(proc->programStk)) < stackPop(&(proc->programStk)))
                 {
                     proc->pointer = (int)proc->program[(long)proc->pointer] - 1;
                 }
-                break;
+                continue;
             }
-            case jbe:
+            if(strstr(asmbler.name[commandNumber], "jbe"))
             {
                 proc->pointer++;
                 if(stackPop(&(proc->programStk)) <= stackPop(&(proc->programStk)))
                 {
                     proc->pointer = (int)proc->program[(long)proc->pointer] - 1;
                 }
-                break;
+                continue;
             }
-            case je:
+            if(strstr(asmbler.name[commandNumber], "je"))
             {
                 proc->pointer++;
                 if(stackPop(&(proc->programStk)) == stackPop(&(proc->programStk)))
                 {
                     proc->pointer = (int)proc->program[(long)proc->pointer] - 1;
                 }
-                break;
+                continue;
             }
-            case jne:
+            if(strstr(asmbler.name[commandNumber], "jne"))
             {
                 proc->pointer++;
                 if(stackPop(&(proc->programStk)) != stackPop(&(proc->programStk)))
                 {
                     proc->pointer = (int)proc->program[(long)proc->pointer] - 1;
                 }
-                break;
+                continue;
             }
-            case jmp:
+            if(strstr(asmbler.name[commandNumber], "jmp"))
             {
                 proc->pointer++;
                 proc->pointer = (int)proc->program[(long)proc->pointer] - 1;
-                break;
+                continue;
             }
-            case call:
+            if(strstr(asmbler.name[commandNumber], "call"))
             {
                 proc->pointer++;
                 stackPush(&proc->functionStk, proc->pointer+1);
                 proc->pointer = (int)proc->program[(long)proc->pointer] - 1;
-                break;
+                continue;
             }
 
-            case out:
+            if(strstr(asmbler.name[commandNumber], "out"))
             {
                 printf("%lg\n", stackPop(&(proc->programStk)));
-                break;
+                continue;
             }
-            case ret:
+            if(strstr(asmbler.name[commandNumber], "ret"))
             {
                 proc->pointer = stackPop(&proc->functionStk);
-                break;
+                continue;
             }
-            case end:
+            if(strstr(asmbler.name[commandNumber], "end"))
             {
                 proc->pointer = proc->programLen;
-                break;
+                continue;
             }
-            default:
-                break;
-        }
     }
     return OK;
 }

@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
+#include "../commands.h"
 
 char* labelToStr(long **labels, int number);
 
