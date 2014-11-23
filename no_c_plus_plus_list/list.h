@@ -1,5 +1,7 @@
+#ifndef LIST_H_INCLUDED
+#define LIST_H_INCLUDED
 #include "errors.h"
-typedef double listData;
+typedef char* listData;
 
 struct list
 {
@@ -22,6 +24,14 @@ errors listOK(listHeader* header);
 
 void listDump(listHeader* header, errors ERROR);
 
-errors addNewList(listHeader *header, list **pointer, listData data);
+list* nextList(const list* list);
+
+list* previousList(const list* list);
+
+errors addNewList(listHeader *header, list *pointer, listData data);
 
 errors deleteList(listHeader *header, list **pointer);
+
+errors listHeaderDestruktor(listHeader* header);
+
+#endif

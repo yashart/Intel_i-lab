@@ -5,7 +5,8 @@ enum errors
     OK              = 0,
     BAD_LIST        = 1,
     BAD_LIST_SIZE   = 2,
-    BAD_MALLOC      = 3
+    BAD_MALLOC      = 3,
+    BAD_FILE        = 4
 };
 
 void dump(const errors ERROR, const char *FUNCTION_NAME, const int LINE, const char *FILE, const bool kill);

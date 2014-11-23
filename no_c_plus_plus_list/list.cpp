@@ -5,8 +5,8 @@
 errors listHeaderConstructor (listHeader* header)
 {
     header->quantityElements = 0;
-    header->firstList        = NULL;
-
+    header->firstList        = (list*) calloc(1, sizeof(*header->firstList));
+    listConstructor(header->firstList);
     return OK;
 }
 
@@ -20,6 +20,7 @@ errors listConstructor(list* list)
 
 errors listOK(listHeader* header)
 {
+    #ifdef DEBUG
     list* pointer = header->firstList;
     for(int i = 0; i < header->quantityElements; i++)
     {
@@ -27,11 +28,14 @@ errors listOK(listHeader* header)
         {
             return BAD_LIST_SIZE;
         }
-        if(pointer != pointer->nextList->previousList)
+        if((i + 1) < header->quantityElements)
         {
-            return BAD_LIST;
+            if ((pointer->nextList != NULL) && (pointer != pointer->nextList->previousList))
+            {
+                return BAD_LIST;
+            }
+            pointer = pointer->nextList;
         }
-        pointer = pointer->nextList;
     }
     for(int i = header->quantityElements - 1; i >= 0; i--)
     {
@@ -39,32 +43,39 @@ errors listOK(listHeader* header)
         {
             return BAD_LIST_SIZE;
         }
-        if(pointer != pointer->previousList->nextList)
+        if(i != 0)
         {
-            return BAD_LIST;
+            if (pointer != pointer->previousList->nextList)
+            {
+                return BAD_LIST;
+            }
+            pointer = pointer->previousList;
         }
-        pointer = pointer->previousList;
     }
+    #endif
     return OK;
 }
 
-void listDump(listHeader *header, errors ERROR) {
+void listDump(listHeader *header, errors ERROR)
+{
     list* pointer = header->firstList;
     printf("List(%d)\n", ERROR);
-    while(pointer->nextList != NULL)
+    if(pointer != NULL)
     {
-        if(pointer == pointer->nextList->previousList)
+        while (pointer->nextList != NULL)
         {
-            printf("<-(");
+            if (pointer == pointer->nextList->previousList)
+            {
+                printf("<-(");
+            }
+            printf("%s)->", pointer->data);
+            pointer = pointer->nextList;
         }
-        printf("%lg)->",pointer->data);
-        pointer = pointer->nextList;
+        printf("(%s)->", pointer->data);
     }
-    printf("(%lg)->",pointer->data);
-    pointer = pointer->nextList;
 }
 
-errors addNewList(listHeader *header, list **pointer, listData data)
+errors addNewList(listHeader *header, list *pointer, listData data)
 {
     if(listOK(header))
     {
@@ -72,30 +83,19 @@ errors addNewList(listHeader *header, list **pointer, listData data)
         PLEASE_KILL_MY_VERY_BAD_FUNCTION(listOK(header));
     }
 
-    list* newList = NULL;
-    newList = (list*) calloc (1, sizeof(*newList));
-    if(newList == NULL)
-    {
-        PLEASE_DONT_KILL_MY_VERY_BAD_FUNCTION(BAD_MALLOC);
-        return BAD_MALLOC;
-    }
+    list* newList = (list*) calloc(1, sizeof(*newList));
     listConstructor(newList);
-    newList->data = data;
-    newList->previousList   = *pointer;
-    newList->nextList       = (*pointer)->nextList;
-    (*pointer)->nextList       = newList;
-    if(newList->nextList != NULL)
-    {
-        newList->nextList->previousList = newList;
-    }
-    *pointer = newList;
-    header->quantityElements++;
-
+    newList->nextList         = pointer;
+    newList->previousList     = pointer->previousList;
+    pointer->previousList     = newList;
+    newList->data             = data;
+    header->firstList         = newList;
     if(listOK(header))
     {
         listDump(header, listOK(header));
         PLEASE_KILL_MY_VERY_BAD_FUNCTION(listOK(header));
     }
+    header->quantityElements ++;
     return OK;
 }
 
@@ -120,7 +120,7 @@ errors deleteList(listHeader *header, list **pointer)
         (*pointer)->previousList->nextList = (*pointer)->nextList;
         newPointerPosition = (*pointer)->previousList;
     }
-
+    free((*pointer)->data);
     free(*pointer);
     *pointer = newPointerPosition;
 
@@ -129,4 +129,34 @@ errors deleteList(listHeader *header, list **pointer)
         listDump(header, listOK(header));
         PLEASE_KILL_MY_VERY_BAD_FUNCTION(listOK(header));
     }
+    return OK;
+}
+
+
+list* nextList(const list *list)
+{
+    return list->nextList;
+}
+
+list* previousList(const list* list)
+{
+    return list->previousList;
+}
+
+errors listHeaderDestruktor(listHeader *header)
+{
+    if (listOK(header))
+    {
+        listDump(header, listOK(header));
+        PLEASE_KILL_MY_VERY_BAD_FUNCTION(listOK(header));
+    }
+    list* point = header->firstList;
+    for(int i = 0; header->quantityElements != 0; i++)
+    {
+        point = nextList(point);
+        deleteList(header, &header->firstList);
+        header->firstList = point;
+    }
+    free(header);
+    return OK;
 }
