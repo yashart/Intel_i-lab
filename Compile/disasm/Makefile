@@ -1,11 +1,11 @@
 CC=g++
 
-CFLAGS=-c -Wall
+CFLAGS=-c
 
 all: disasm
 
 disasm: main.o disasm.o errors.o fileworking.o commands.o
-	$(CC) main.o disasm.o errors.o fileworking.o commands.o -o asm
+	$(CC) main.o disasm.o errors.o fileworking.o commands.o -o disasm
 
 main.o: main.cpp
 	$(CC) $(CFLAGS) main.cpp
@@ -23,4 +23,4 @@ commands.o: ../commands.cpp
 	$(CC) $(CFLAGS) ../commands.cpp
 
 clean:
-	rm -rf *.o asm
+	rm -rf *.o disasm

@@ -1,6 +1,6 @@
 CC=g++
 
-CFLAGS=-c -Wall
+CFLAGS=-c
 
 all: runner
 

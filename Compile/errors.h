@@ -2,9 +2,16 @@
 #define ERRORS_H_INCLUDED
 enum errors
 {
-#define errorsdata(name, value) name = value,
-#include "errors_data.h"
-#undef errorsdata
+	OK = 1,
+	FILE_NO_OPEN = 2,
+	NULL_LENGTH = 3,
+	BAD_MALLOC = 4,
+	NULLPOINTER = 6,
+	ENDOFARRAY = 7,
+	STACKFULL = 8,
+	STACKNULLSIZE = 9,
+	ENDOFFILE = 10,
+	BAD_FILE = 5,
         MAXERROR
 };
 extern errors MY_ERRNO;

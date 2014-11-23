@@ -2,7 +2,7 @@
 #include "../commands.h"
 #include <string.h>
 
-const char* INPUT_FILE_NAME = "disasm.txt";
+const char* INPUT_FILE_NAME = "input.txt";
 
 errors runnerConstruction(runner *proc)
 {
